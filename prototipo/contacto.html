@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contactos e orçamentos — Florida Light Solutions</title>
+  <meta name="description" content="Peça o seu orçamento de iluminação e material elétrico. Carregal do Sal. Telefone, email e WhatsApp.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="footer-note">⚠️ Protótipo de proposta — não é o site oficial. Dados de exemplo.</div>
+
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="index.html"><span class="bulb">💡</span><span>Florida<small>Light Solutions</small></span></a>
+      <nav class="nav-links">
+        <a href="index.html">Início</a>
+        <a href="catalogo.html">Produtos</a>
+        <a href="catalogo.html?cat=interior">Interior</a>
+        <a href="catalogo.html?cat=exterior">Exterior</a>
+        <a href="contacto.html" class="active">Contactos</a>
+      </nav>
+      <div class="nav-actions"><a class="btn btn-wa" data-wa href="#" target="_blank">💬 WhatsApp</a></div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Início</a>
+      <a href="catalogo.html">Produtos</a>
+      <a href="catalogo.html?cat=interior">Interior</a>
+      <a href="catalogo.html?cat=exterior">Exterior</a>
+      <a href="catalogo.html?cat=eletrico">Material Elétrico</a>
+      <a href="contacto.html">Contactos</a>
+    </div>
+  </header>
+
+  <section class="hero" style="padding:clamp(2.5rem,2rem+3vw,4rem) 0">
+    <div class="wrap" style="display:block">
+      <span class="kicker">Fale connosco</span>
+      <h1 style="max-width:20ch">Peça o seu orçamento</h1>
+      <p class="lead">Respondemos a instaladores, eletricistas e revendedores em minutos. Diga-nos o que precisa.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="contact-grid">
+        <!-- Formulário -->
+        <div>
+          <h2 style="font-size:1.4rem">Pedido de orçamento</h2>
+          <form id="contactForm" style="margin-top:1rem">
+            <div class="field"><label for="nome">Nome / Empresa *</label><input id="nome" required placeholder="O seu nome ou empresa"></div>
+            <div class="field"><label for="email">Email *</label><input id="email" type="email" required placeholder="nome@email.pt"></div>
+            <div class="field"><label for="tel">Telefone</label><input id="tel" type="tel" placeholder="+351 …"></div>
+            <div class="field">
+              <label for="tipo">Tipo de cliente</label>
+              <select id="tipo">
+                <option>Instalador / Eletricista</option>
+                <option>Revendedor</option>
+                <option>Empresa / Obra</option>
+                <option>Particular</option>
+              </select>
+            </div>
+            <div class="field"><label for="msg">Produtos / referências pretendidas *</label><textarea id="msg" rows="4" required placeholder="Ex.: 20× Foco LED 12W 2700K (ref. 1351227), 5× Projetor 50W…"></textarea></div>
+            <button class="btn btn-primary btn-block" type="submit">Enviar pedido de orçamento</button>
+            <p class="muted" style="font-size:.8rem;margin-top:.6rem">Ao enviar concorda com o tratamento dos dados para efeitos de resposta ao pedido.</p>
+          </form>
+        </div>
+
+        <!-- Info -->
+        <div>
+          <div class="info-card">
+            <h3 style="font-size:1.1rem">Florida Light Solutions</h3>
+            <p class="muted" style="margin:.2rem 0 1rem">J. Flórido – Comércio Internacional, Lda.</p>
+            <div class="info-row"><span class="i">📍</span><div><b>Morada</b><br><span class="muted">Centro Comercial Flórida, Av. Nossa Sra. das Febres, 3430-039 Carregal do Sal</span></div></div>
+            <div class="info-row"><span class="i">📞</span><div><b>Telefone</b><br><a data-tel href="#">(+351) 232 968 811</a></div></div>
+            <div class="info-row"><span class="i">📱</span><div><b>Telemóvel / WhatsApp</b><br><a data-wa href="#" target="_blank">(+351) 927 957 641</a></div></div>
+            <div class="info-row"><span class="i">✉️</span><div><b>Email</b><br><a data-mail href="#">geral@florida.pt</a></div></div>
+            <div class="info-row"><span class="i">🕗</span><div><b>Horário</b><br><span class="muted">Atendimento presencial em dias úteis</span></div></div>
+          </div>
+
+          <div class="info-card" style="margin-top:1rem">
+            <h3 style="font-size:1.05rem">Vantagens para profissionais</h3>
+            <div class="badges" style="margin-top:.6rem">
+              <span class="badge">💶 Preços de revenda</span>
+              <span class="badge">🚚 Portes grátis &gt; 160€</span>
+              <span class="badge">📄 Fichas técnicas em PDF</span>
+              <span class="badge">🛡️ Garantia 2 anos</span>
+            </div>
+            <a class="btn btn-wa btn-block" data-wa href="#" target="_blank" style="margin-top:1rem">💬 Falar agora por WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <a class="brand" href="index.html" style="color:#fff"><span class="bulb">💡</span><span>Florida<small style="color:#94a3b8">Light Solutions</small></span></a>
+        <p class="muted" style="margin-top:.8rem;max-width:34ch">Importador e distribuidor de iluminação e material elétrico há mais de 25 anos.</p>
+      </div>
+      <div><h5>Catálogo</h5>
+        <a href="catalogo.html?cat=interior">Interior</a>
+        <a href="catalogo.html?cat=exterior">Exterior</a>
+        <a href="catalogo.html?cat=eletrico">Material Elétrico</a>
+        <a href="catalogo.html?cat=outros">Outros</a>
+      </div>
+      <div><h5>Contactos</h5>
+        <a data-tel href="#">(+351) 232 968 811</a>
+        <a data-mail href="#">geral@florida.pt</a>
+        <a href="contacto.html">Carregal do Sal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Florida Light Solutions · Protótipo de proposta comercial</div>
+  </footer>
+
+  <a class="wa-float" data-wa href="#" target="_blank" aria-label="WhatsApp">💬</a>
+
+  <script src="js/produtos.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
