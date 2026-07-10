@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://anderson17quadri-cmd.github.io/Florida/prototipo/sitemap.xml

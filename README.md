@@ -50,7 +50,16 @@ Opcional (servidor local): `cd prototipo && python3 -m http.server 8000` → htt
 - **Catálogo** com filtros reais em JS (categoria, preço, IP, casquilho), pesquisa por nome/referência/EAN e ordenação.
 - **Ficha de produto completa**: galeria, tabela de especificações, ficha técnica em PDF, selos de confiança, **botão "Pedir orçamento" + WhatsApp** com a referência pré-preenchida.
 - **WhatsApp flutuante** em todas as páginas.
-- **Mobile-first** e SEO técnico (title/meta por página, URLs limpos, HTML semântico). Pronto para acrescentar sitemap e schema.org de Produto.
+- **Mobile-first** e SEO técnico (title/meta por página, URLs limpos, HTML semântico).
+
+### Melhorias já implementadas
+- **Lista de orçamento multi-produto** (`orcamento.html`): botão **＋** em cada produto junta ao orçamento (guardado em `localStorage`), com contador no cabeçalho. A página lista tudo com quantidades e envia de uma vez por **WhatsApp**, **email** ou formulário. É o que o site atual não tem.
+- **SEO técnico real:** dados estruturados **schema.org/Product** em JSON-LD injetados em cada ficha, `sitemap.xml`, `robots.txt`, tags **Open Graph**/Twitter (partilha do link com logo+imagem) e `canonical`.
+- **Ficha premium:** seletor de **temperatura de cor** (4000K/6400K) que atualiza a specs e a mensagem de WhatsApp, e **lightbox** para ampliar a foto.
+
+> Nota: `sitemap.xml`/`robots.txt` usam como base o URL do GitHub Pages
+> (`…github.io/Florida/prototipo/`). Ao publicar num domínio próprio, é só
+> trocar essa base.
 
 ## Piloto: categoria Downlights com dados REAIS
 

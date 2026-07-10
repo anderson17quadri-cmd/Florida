@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ficha de produto — Florida Light Solutions</title>
-  <meta name="description" content="Ficha técnica completa: potência, IP, casquilho, lúmens, dimensões. Peça orçamento ou fale por WhatsApp.">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="canonical" href="produto.html">
-  <meta property="og:title" content="Ficha de produto — Florida Light Solutions">
-  <meta property="og:description" content="Ficha técnica completa: potência, IP, casquilho, lúmens, dimensões. Peça orçamento ou fale por WhatsApp.">
-  <meta property="og:type" content="product">
+  <title>O meu orçamento — Florida Light Solutions</title>
+  <meta name="description" content="A sua lista de produtos para pedido de orçamento. Envie por WhatsApp ou email à Florida Light Solutions.">
+  <link rel="canonical" href="orcamento.html">
+  <meta property="og:title" content="O meu orçamento — Florida Light Solutions">
+  <meta property="og:description" content="Junte vários produtos e peça o orçamento de uma vez.">
+  <meta property="og:type" content="website">
   <meta property="og:image" content="img/logo-social.png">
-  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="footer-note">⚠️ Protótipo de proposta — não é o site oficial.</div>
@@ -27,7 +26,8 @@
         <a href="contacto.html">Contactos</a>
       </nav>
       <div class="nav-actions">
-        <a class="btn btn-ghost quote-btn" href="orcamento.html" title="O meu orçamento">🧾 <span data-quote-count>0</span></a><a class="btn btn-primary" href="contacto.html">Pedir orçamento</a></div>
+        <a class="btn btn-ghost quote-btn" href="orcamento.html">🧾 <span data-quote-count>0</span></a>
+      </div>
       <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
     </div>
     <div class="mobile-menu" id="mobileMenu">
@@ -41,19 +41,20 @@
   </header>
 
   <div class="wrap">
-    <div class="crumb">
-      <a href="index.html">Início</a> › <span id="crumbCat"></span> › <span id="crumbSub"></span>
+    <div class="crumb"><a href="index.html">Início</a> › O meu orçamento</div>
+    <h1 style="margin-bottom:1.2rem">O meu orçamento</h1>
+
+    <div id="quoteRoot"></div>
+
+    <div id="quoteActions" class="quote-actions hidden">
+      <a class="btn btn-wa" id="quoteWa" href="#" target="_blank" rel="noopener">💬 Enviar por WhatsApp</a>
+      <a class="btn btn-primary" id="quoteMail" href="#">✉️ Enviar por email</a>
+      <a class="btn btn-dark" href="contacto.html">📝 Formulário de contacto</a>
+      <button class="btn btn-ghost" id="quoteClear">Limpar lista</button>
     </div>
-
-    <div class="pd" id="pd"><!-- render por JS a partir de ?ref= --></div>
-
-    <section class="block" style="padding-top:2.5rem">
-      <h2 style="font-size:1.4rem">Produtos relacionados</h2>
-      <div class="product-grid" id="related" style="margin-top:1rem"></div>
-    </section>
   </div>
 
-  <footer class="site-footer">
+  <footer class="site-footer" style="margin-top:3rem">
     <div class="wrap">
       <div>
         <a class="brand" href="index.html"><img class="logo logo-light" src="img/logo-florida.png" alt="Florida Light Solutions"></a>

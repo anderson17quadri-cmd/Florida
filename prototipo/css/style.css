@@ -282,3 +282,76 @@ select.sort { font:inherit; padding:.6rem .9rem; border:1px solid var(--line); b
 /* ---------- Utilitários ---------- */
 .hidden { display:none !important; }
 .empty { text-align:center; padding:3rem 1rem; color:var(--muted); }
+
+/* ============================================================
+   Melhorias: orçamento, badge, toast, temperatura, lightbox
+   ============================================================ */
+
+/* Pílula de orçamento no cabeçalho */
+.quote-btn { position:relative; display:inline-flex; align-items:center; gap:.4rem; font-weight:600; }
+.quote-btn [data-quote-count] {
+  min-width:20px; height:20px; padding:0 6px; border-radius:999px;
+  background:var(--line); color:var(--slate); font-size:.72rem; font-weight:700;
+  display:inline-grid; place-items:center; transition:.15s;
+}
+.quote-btn.has-items [data-quote-count] { background:var(--amber); color:#1a1200; }
+
+/* Ações no cartão */
+.card-actions { display:flex; gap:.4rem; margin-top:.4rem; }
+.card-actions .card-btn { flex:1; justify-content:center; }
+.card-add { padding:.6rem .8rem; font-size:1.1rem; line-height:1; font-weight:700; }
+
+/* Toast */
+.toast {
+  position:fixed; left:50%; bottom:84px; transform:translate(-50%,20px);
+  background:var(--ink); color:#fff; padding:.7rem 1.1rem; border-radius:999px;
+  font-size:.9rem; font-weight:500; box-shadow:var(--shadow-lg); z-index:60;
+  opacity:0; pointer-events:none; transition:.25s ease; max-width:90vw; text-align:center;
+}
+.toast.show { opacity:1; transform:translate(-50%,0); }
+
+/* Seletor de temperatura de cor */
+.temp-row { display:flex; align-items:center; gap:.7rem; margin:.2rem 0 1rem; flex-wrap:wrap; }
+.temp-select { display:inline-flex; gap:.4rem; }
+.temp-opt {
+  font:inherit; cursor:pointer; padding:.4rem .8rem; border-radius:999px;
+  border:1px solid var(--line); background:var(--card); font-weight:600; font-size:.85rem; transition:.15s;
+}
+.temp-opt:hover { border-color:var(--amber); }
+.temp-opt.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+
+/* Link "ver o meu orçamento" na ficha */
+.pd-quote-link { display:inline-block; margin:-.4rem 0 1rem; font-weight:600; color:var(--amber-600); font-size:.9rem; }
+.pd-quote-link:hover { text-decoration:underline; }
+
+/* Dica de zoom + cursor na galeria */
+.gallery .main.zoomable { cursor:zoom-in; }
+.gallery .zoom-hint {
+  position:absolute; bottom:.8rem; right:.8rem; background:rgba(15,23,42,.75); color:#fff;
+  font-size:.72rem; padding:.3rem .6rem; border-radius:999px; pointer-events:none;
+}
+.gallery .main { position:relative; }
+
+/* Lightbox */
+.lightbox {
+  position:fixed; inset:0; z-index:80; background:rgba(15,23,42,.9);
+  display:none; place-items:center; padding:5vw; cursor:zoom-out;
+}
+.lightbox.open { display:grid; }
+.lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:12px; background:#fff; padding:2%; }
+.lb-close { position:absolute; top:18px; right:22px; background:none; border:none; color:#fff;
+  font-size:1.8rem; cursor:pointer; line-height:1; }
+
+/* Página de orçamento */
+.quote-table { width:100%; border-collapse:collapse; background:var(--card);
+  border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; }
+.quote-table th, .quote-table td { text-align:left; padding:.9rem 1rem; border-bottom:1px solid var(--line); vertical-align:middle; }
+.quote-table thead th { font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); background:var(--bg); }
+.quote-table tr:last-child td { border-bottom:none; }
+.qty { display:inline-flex; align-items:center; gap:.2rem; border:1px solid var(--line); border-radius:999px; padding:.15rem; }
+.qty button { width:30px; height:30px; border:none; background:var(--bg); border-radius:50%; cursor:pointer; font-size:1rem; font-weight:700; color:var(--slate); }
+.qty button:hover { background:var(--amber-100); color:var(--amber-600); }
+.qty span { min-width:28px; text-align:center; font-weight:700; }
+.qdel { background:none; border:none; cursor:pointer; font-size:1.1rem; opacity:.7; }
+.qdel:hover { opacity:1; }
+.quote-actions { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.4rem; }
