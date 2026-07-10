@@ -29,11 +29,14 @@ function productCard(p){
     p.casquilho && p.casquilho!=="—" && p.casquilho!=="Integrado" ? p.casquilho : null,
     p.temp && p.temp!=="—" ? p.temp : null,
   ].filter(Boolean);
+  const media = p.img
+    ? `<img src="${p.img}" alt="${p.nome}" loading="lazy">`
+    : `<span class="ph">${p.emoji}</span>`;
   return `
   <article class="card">
-    <a class="thumb" href="${href}" aria-label="${p.nome}">
+    <a class="thumb${p.img?' has-img':''}" href="${href}" aria-label="${p.nome}">
       ${p.pop ? '<span class="tag">Popular</span>' : ''}
-      <span>${p.emoji}</span>
+      ${media}
     </a>
     <div class="body">
       <span class="cat">${p.sub}</span>
@@ -173,11 +176,15 @@ function initProduct(){
 
   const msg = `Olá! Gostaria de um orçamento para: ${p.nome} (Ref. ${p.ref}). Quantidade: `;
 
+  const mainMedia = p.img
+    ? `<img src="${p.img}" alt="${p.nome}">`
+    : `<span class="ph">${p.emoji}</span>`;
   root.innerHTML = `
     <div class="gallery">
-      <div class="main" id="galMain">${p.emoji}</div>
+      <div class="main${p.img?' has-img':''}" id="galMain">${mainMedia}</div>
       <div class="thumbs">
-        <div class="active">${p.emoji}</div><div>📐</div><div>🔧</div><div>🏠</div>
+        <div class="active">${p.img?`<img src="${p.img}" alt="">`:p.emoji}</div>
+        <div>📐</div><div>🔧</div><div>🏠</div>
       </div>
       <a class="datasheet" href="#" onclick="alert('No site real: descarrega a ficha técnica em PDF deste produto.');return false;">📄 Descarregar ficha técnica (PDF)</a>
     </div>

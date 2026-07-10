@@ -62,10 +62,12 @@ que o site deles não tem. As fichas marcam "catálogo florida.pt".
 
 Serve para levar à reunião algo com os produtos reais da empresa, não dados fictícios.
 
-**Fotos reais (opcional):** o protótipo usa emoji como placeholder para funcionar offline.
-Para usar fotos verdadeiras, coloca as imagens em `prototipo/img/<ref>.webp` e troca o
-`emoji` por um `<img>` no cartão (`js/app.js` → `productCard`). Numa versão de produção as
-imagens vivem no Supabase Storage.
+**Logótipo e fotos reais:** o protótipo já usa o **logótipo oficial FLÓRIDA** (versão
+preta no cabeçalho, branca no rodapé — `prototipo/img/logo-florida*.png`) e as **fotos
+reais** dos downlights, ambos extraídos de florida.pt. Os produtos sem foto real usam um
+emoji como placeholder. Para juntar mais fotos: coloca a imagem em `prototipo/img/` e liga-a
+no produto com o campo `img:"img/ficheiro.png"` em `js/produtos.js`. Em produção as imagens
+vivem no Supabase Storage.
 
 ## Arquitetura proposta para produção (Fase 3)
 
