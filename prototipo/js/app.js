@@ -22,6 +22,7 @@ function initMenu(){
 
 /* ---------- Cartão de produto ---------- */
 function productCard(p){
+  const href = `produto.html?ref=${encodeURIComponent(p.ref)}`;
   const specs = [
     p.potencia ? `${p.potencia}W` : null,
     p.ip && p.ip!=="—" ? p.ip : null,
@@ -30,16 +31,16 @@ function productCard(p){
   ].filter(Boolean);
   return `
   <article class="card">
-    <a class="thumb" href="produto.html?ref=${p.ref}" aria-label="${p.nome}">
+    <a class="thumb" href="${href}" aria-label="${p.nome}">
       ${p.pop ? '<span class="tag">Popular</span>' : ''}
       <span>${p.emoji}</span>
     </a>
     <div class="body">
       <span class="cat">${p.sub}</span>
-      <h3><a href="produto.html?ref=${p.ref}">${p.nome}</a></h3>
+      <h3><a href="${href}">${p.nome}</a></h3>
       <div class="specs">${specs.map(s=>`<span class="chip">${s}</span>`).join("")}</div>
       <div class="price">${eur(p.preco)} ${p.preco!=null?'<small>+IVA</small>':''}</div>
-      <a class="btn btn-dark btn-block card-btn" href="produto.html?ref=${p.ref}">Ver ficha</a>
+      <a class="btn btn-dark btn-block card-btn" href="${href}">Ver ficha</a>
     </div>
   </article>`;
 }
@@ -183,7 +184,7 @@ function initProduct(){
     <div class="pd-info">
       <span class="cat">${p.sub}</span>
       <h1 style="margin:.2rem 0">${p.nome}</h1>
-      <div class="ref">Ref. ${p.ref} · EAN ${p.ean}</div>
+      <div class="ref">Ref. ${p.ref}${p.ean?` · EAN ${p.ean}`:""}${p.real?` · <span style="color:var(--amber-600);font-weight:600">catálogo florida.pt</span>`:""}</div>
       <div class="price-row">
         <span class="big">${eur(p.preco)}</span>
         ${p.preco!=null?'<span class="muted">+ IVA · preço para revenda</span>':''}

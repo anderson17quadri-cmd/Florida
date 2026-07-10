@@ -52,6 +52,21 @@ Opcional (servidor local): `cd prototipo && python3 -m http.server 8000` → htt
 - **WhatsApp flutuante** em todas as páginas.
 - **Mobile-first** e SEO técnico (title/meta por página, URLs limpos, HTML semântico). Pronto para acrescentar sitemap e schema.org de Produto.
 
+## Piloto: categoria Downlights com dados REAIS
+
+A subcategoria **Interior › Downlights** do protótipo usa produtos reais extraídos de
+florida.pt (nomes, referências e especificações verdadeiros — ex.: `Downlight LED 12W
+Redondo`, ref. `40111240/64`, Ø170×21mm, 1000lm, IP44). O preço fica **"Sob consulta"**,
+tal como no site atual, para demonstrar o fluxo **Pedir orçamento / WhatsApp** — o botão
+que o site deles não tem. As fichas marcam "catálogo florida.pt".
+
+Serve para levar à reunião algo com os produtos reais da empresa, não dados fictícios.
+
+**Fotos reais (opcional):** o protótipo usa emoji como placeholder para funcionar offline.
+Para usar fotos verdadeiras, coloca as imagens em `prototipo/img/<ref>.webp` e troca o
+`emoji` por um `<img>` no cartão (`js/app.js` → `productCard`). Numa versão de produção as
+imagens vivem no Supabase Storage.
+
 ## Arquitetura proposta para produção (Fase 3)
 
 Frontend estático (o deste protótipo) + **Supabase** como base de dados e backend, tal como no Agendado.pt:
