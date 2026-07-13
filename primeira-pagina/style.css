@@ -1,0 +1,1161 @@
+/* ==========================================================================
+   PRIMEIRA PÁGINA — style.css
+   Landing page premium · HTML/CSS/JS vanilla + GSAP + Lenis
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS (variáveis CSS)
+   Alterar aqui muda toda a identidade visual do site.
+   -------------------------------------------------------------------------- */
+:root {
+  --navy: #0a1a3a;
+  --navy-light: #14275c;
+  --navy-darker: #060f24;      /* footer */
+  --green: #3ec93e;
+  --green-dark: #2fa82f;
+  --green-soft: rgba(62, 201, 62, 0.1);
+  --white: #ffffff;
+  --off-white: #fafafa;
+  --gray-text: #5a6272;
+  --gray-border: #e5e7eb;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+
+  --radius-card: 20px;
+  --radius-btn: 12px;
+
+  --shadow-card: 0 4px 24px rgba(10, 26, 58, 0.08);
+  --shadow-card-hover: 0 12px 40px rgba(10, 26, 58, 0.16);
+  --shadow-cta: 0 8px 24px rgba(62, 201, 62, 0.35);
+
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --header-height: 84px;
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET / BASE
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: auto; /* Lenis trata do smooth scroll */ }
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--navy);
+  background: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; border: none; background: none; cursor: pointer; }
+
+.container {
+  width: min(1200px, 100% - 48px);
+  margin-inline: auto;
+}
+
+/* Micro-labels (categorias, "01", etc.) */
+.section-label {
+  display: block;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 13px;
+  color: var(--gray-text);
+  margin-bottom: 12px;
+}
+
+.text-green { color: var(--green); }
+
+/* Espaçamento padrão entre secções */
+.section { padding: 110px 0; }
+.section-alt { background: var(--off-white); }
+
+.section-head {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 64px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.section-title--light { color: var(--white); }
+
+.section-sub {
+  margin-top: 16px;
+  color: var(--gray-text);
+  font-size: 1.05rem;
+}
+
+/* Estado inicial dos elementos revelados por scroll (evita flash antes
+   do GSAP assumir; o JS anima para opacity:1 / y:0) */
+[data-reveal],
+[data-reveal-group],
+[data-cta-reveal] { opacity: 0; }
+
+/* Se o JS falhar (ex.: CDN bloqueado), mostra tudo na mesma */
+.no-js [data-reveal],
+.no-js [data-reveal-group],
+.no-js [data-cta-reveal] { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+   3. BOTÕES
+   Todos com transição suave de transform + sombra + fundo (0.3s).
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  border-radius: 999px; /* pill */
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.3s var(--ease-smooth),
+              box-shadow 0.3s var(--ease-smooth),
+              background 0.3s var(--ease-smooth),
+              color 0.3s var(--ease-smooth),
+              border-color 0.3s var(--ease-smooth);
+  will-change: transform;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: var(--white);
+  box-shadow: var(--shadow-cta);
+}
+.btn-primary:hover {
+  background: var(--green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(62, 201, 62, 0.45);
+}
+
+.btn-outline {
+  border: 2px solid var(--navy);
+  color: var(--navy);
+  background: transparent;
+}
+.btn-outline:hover {
+  background: var(--navy);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.btn-white {
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.btn-white:hover {
+  background: var(--off-white);
+  transform: translateY(-2px);
+}
+
+/* Seta dentro dos botões desliza 4px para a direita no hover */
+.btn-arrow {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s var(--ease-smooth);
+}
+.btn:hover .btn-arrow { transform: translateX(4px); }
+
+/* --------------------------------------------------------------------------
+   4. LOGO (SVG inline)
+   -------------------------------------------------------------------------- */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark { width: 40px; height: 40px; flex-shrink: 0; }
+.logo-p-main { fill: var(--navy); }
+.logo-p-fold { fill: var(--green); }
+.logo-p-line { fill: var(--white); }
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.05;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+.logo-text-top { color: var(--navy); }
+.logo-text-bottom { color: var(--green); }
+
+/* Versão monocromática (footer): tudo branco/verde suave */
+.logo--mono .logo-p-main { fill: var(--white); }
+.logo--mono .logo-p-fold { fill: var(--green); }
+.logo--mono .logo-p-line { fill: var(--navy-darker); }
+.logo--mono .logo-text-top { color: var(--white); }
+
+/* --------------------------------------------------------------------------
+   5. LOADER (page reveal)
+   Overlay navy em ecrã inteiro; o GSAP desliza-o para cima no load.
+   -------------------------------------------------------------------------- */
+/* Se o JS/CDN falhar, o loader não pode ficar a tapar a página */
+.no-js .loader { display: none; }
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  color: var(--white);
+  line-height: 1.1;
+}
+.loader-word--green { color: var(--green); }
+
+/* --------------------------------------------------------------------------
+   6. CURSOR CUSTOMIZADO
+   Círculo verde que segue o rato (posição via JS). Desativado em ecrãs
+   táteis (@media hover: none).
+   -------------------------------------------------------------------------- */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(62, 201, 62, 0.55);
+  border: 1.5px solid var(--green);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s var(--ease-smooth), height 0.25s var(--ease-smooth),
+              background 0.25s var(--ease-smooth);
+  opacity: 0;
+}
+.cursor.is-visible { opacity: 1; }
+.cursor.is-hovering {
+  width: 48px;
+  height: 48px;
+  background: rgba(62, 201, 62, 0.18);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   7. HEADER
+   Transparente sobre o hero; classe .is-scrolled (JS) ativa fundo branco.
+   -------------------------------------------------------------------------- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Acima do overlay do menu mobile (1001), para o hambúrguer/logo
+     continuarem clicáveis com o menu aberto */
+  z-index: 1002;
+  height: var(--header-height);
+  transition: background 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth);
+}
+
+/* Com o menu mobile aberto: header fica transparente sobre o overlay navy
+   e o logo passa à versão clara para se manter legível */
+.header.menu-open {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.header.menu-open .logo-p-main { fill: var(--white); }
+.header.menu-open .logo-p-line { fill: var(--navy); }
+.header.menu-open .logo-text-top { color: var(--white); }
+
+.header.is-scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 16px rgba(10, 26, 58, 0.08);
+}
+
+.header-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.nav { display: flex; gap: 36px; }
+
+/* Underline animado: ::after cresce de scaleX(0) a scaleX(1) */
+.nav-link {
+  position: relative;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--navy);
+  padding: 6px 0;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--green);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s var(--ease-smooth);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+.btn-header { padding: 12px 24px; font-size: 0.9rem; }
+
+/* Hambúrguer (só mobile) */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  z-index: 1002;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--navy);
+  transition: transform 0.3s var(--ease-smooth), opacity 0.3s, background 0.3s;
+}
+/* X quando o menu está aberto */
+.hamburger.is-open span { background: var(--white); }
+.hamburger.is-open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.hamburger.is-open span:nth-child(2) { opacity: 0; }
+.hamburger.is-open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+/* Overlay do menu mobile */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s var(--ease-smooth), visibility 0.4s;
+}
+.mobile-menu.is-open { opacity: 1; visibility: visible; }
+
+.mobile-menu-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+.mobile-link {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--white);
+}
+.mobile-link.btn { font-family: var(--font-body); font-size: 1rem; }
+
+/* --------------------------------------------------------------------------
+   8. HERO
+   -------------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: var(--off-white);
+  overflow: hidden;
+  padding-top: var(--header-height);
+}
+
+/* Formas flutuantes desfocadas ao fundo (animadas em loop no JS) */
+.hero-shapes, .cta-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+.shape-green { background: rgba(62, 201, 62, 0.18); }
+.shape-navy { background: rgba(20, 39, 92, 0.12); }
+.shape-1 { width: 380px; height: 380px; top: -80px; left: -120px; }
+.shape-2 { width: 300px; height: 300px; bottom: 10%; right: -80px; }
+.shape-3 { width: 220px; height: 220px; top: 45%; left: 40%; opacity: 0.7; }
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--green-soft);
+  color: var(--navy);
+  border: 1px solid rgba(62, 201, 62, 0.3);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  color: var(--navy);
+}
+.hero-word { display: inline-block; /* necessário para animar translateY por palavra */ }
+.hero-word--green { color: var(--green); }
+
+.hero-sub {
+  margin-top: 24px;
+  font-size: 1.15rem;
+  color: var(--gray-text);
+  max-width: 480px;
+}
+
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+/* Estados iniciais das animações de entrada do hero
+   (o GSAP anima para os valores finais no load) */
+.hero-badge, .hero-word, .hero-sub, .hero-cta,
+.hero-mockup-wrap, .scroll-indicator { opacity: 0; }
+.no-js .hero-badge, .no-js .hero-word, .no-js .hero-sub, .no-js .hero-cta,
+.no-js .hero-mockup-wrap, .no-js .scroll-indicator { opacity: 1; }
+
+/* ---- Mockup de browser flutuante ---- */
+.hero-mockup-wrap {
+  perspective: 1200px; /* dá profundidade à rotação 3D do mockup */
+}
+
+.browser-mockup {
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(10, 26, 58, 0.18);
+  overflow: hidden;
+  transform: rotateY(-6deg) rotateX(2deg); /* pose 3D base */
+  transform-style: preserve-3d;
+}
+
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px;
+  background: #eef0f4;
+  border-bottom: 1px solid var(--gray-border);
+}
+.browser-dot { width: 11px; height: 11px; border-radius: 50%; }
+.dot-red { background: #ff5f57; }
+.dot-yellow { background: #febc2e; }
+.dot-green { background: #28c840; }
+.browser-url {
+  margin-left: 12px;
+  flex: 1;
+  background: var(--white);
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--gray-text);
+}
+
+/* Landing page fictícia dentro do browser */
+.browser-body { padding: 22px 24px 28px; background: var(--white); }
+.fake-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.fake-logo { width: 34px; height: 12px; border-radius: 4px; background: var(--navy); }
+.fake-links { display: flex; gap: 8px; }
+.fake-links i { width: 26px; height: 7px; border-radius: 4px; background: var(--gray-border); }
+.fake-hero { display: flex; flex-direction: column; gap: 10px; }
+.fake-title { width: 75%; height: 16px; border-radius: 5px; background: var(--navy); }
+.fake-title--short { width: 50%; }
+.fake-text { width: 85%; height: 8px; border-radius: 4px; background: var(--gray-border); }
+.fake-btn { width: 110px; height: 26px; border-radius: 999px; background: var(--green); margin-top: 6px; }
+.fake-cards { display: flex; gap: 12px; margin-top: 24px; }
+.fake-cards i {
+  flex: 1;
+  height: 54px;
+  border-radius: 10px;
+  background: var(--off-white);
+  border: 1px solid var(--gray-border);
+}
+
+/* ---- Indicador de scroll ---- */
+.scroll-indicator {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+}
+.mouse {
+  width: 24px;
+  height: 38px;
+  border: 2px solid var(--navy);
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  padding-top: 7px;
+  opacity: 0.6;
+}
+.mouse-wheel {
+  width: 3px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--navy);
+}
+.scroll-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gray-text);
+}
+
+/* --------------------------------------------------------------------------
+   9. PROVA SOCIAL (stats)
+   -------------------------------------------------------------------------- */
+.stats {
+  padding: 70px 0;
+  background: var(--white);
+  border-top: 1px solid var(--gray-border);
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--navy);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.stat-accent { font-style: normal; color: var(--green); }
+.stat-unit { font-style: normal; font-size: 0.55em; color: var(--gray-text); font-family: var(--font-body); font-weight: 600; }
+
+.stat-label {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--gray-text);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   10. PROBLEMA / SOLUÇÃO
+   -------------------------------------------------------------------------- */
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.problem-card {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-card);
+  padding: 40px 32px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
+}
+/* Hover: levanta 8px + sombra mais forte */
+.problem-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  margin-bottom: 22px;
+}
+.icon-circle svg { width: 28px; height: 28px; }
+
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+.card-text { color: var(--gray-text); font-size: 0.98rem; }
+
+/* --------------------------------------------------------------------------
+   11. PORTFÓLIO (mockups de laptop + tilt 3D)
+   -------------------------------------------------------------------------- */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.portfolio-card {
+  will-change: transform;
+  transform-style: preserve-3d; /* permite o tilt 3D calculado em JS */
+}
+
+.laptop-wrap {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-card);
+  padding: 40px 48px 28px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.3s var(--ease-smooth);
+  overflow: hidden;
+}
+.portfolio-card:hover .laptop-wrap { box-shadow: var(--shadow-card-hover); }
+
+/* ---- Mockup de laptop em CSS puro ---- */
+.laptop {
+  transform: perspective(1000px) rotateX(2deg); /* leve pose 3D */
+}
+
+.laptop-screen {
+  position: relative;
+  border-radius: 12px 12px 0 0;
+  padding: 10px 10px 0;
+  /* moldura tipo alumínio escuro */
+  background: linear-gradient(180deg, #3a3f47 0%, #1c1f24 100%);
+  overflow: hidden;
+}
+
+/* Janela de recorte para o parallax da "tela":
+   o conteúdo interno é mais alto e desloca-se com o scroll (JS) */
+.screen-parallax {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 6px 6px 0 0;
+}
+
+.screen-content {
+  position: absolute;
+  inset: -24px 0; /* mais alto que a janela → margem para o parallax de ±20px */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px;
+}
+
+/* Fundos diferentes por projeto */
+.screen-p1 { background: linear-gradient(135deg, #14275c, #0a1a3a); }
+.screen-p2 { background: linear-gradient(135deg, #7a5c9e, #43315e); }
+.screen-p3 { background: linear-gradient(135deg, #b3541e, #7a3010); }
+.screen-p4 { background: linear-gradient(135deg, #1f8a70, #0f4c3f); }
+.screen-p5 { background: linear-gradient(135deg, #2b6cb0, #1a3a5c); }
+.screen-p6 { background: linear-gradient(135deg, #3ec93e, #1f7a1f); }
+
+.screen-fake-nav { display: flex; gap: 6px; margin-bottom: 8px; }
+.screen-fake-nav i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); }
+
+.screen-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.screen-line { width: 70%; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.3); }
+.screen-line--short { width: 45%; }
+.screen-btn { width: 92px; height: 24px; border-radius: 999px; background: var(--green); margin-top: 6px; }
+
+/* Base do laptop */
+.laptop-base {
+  height: 14px;
+  margin: 0 -28px;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(180deg, #d7dade 0%, #9aa0a8 100%);
+  position: relative;
+}
+.laptop-base::before {
+  /* entalhe central da base */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 5px;
+  border-radius: 0 0 8px 8px;
+  background: #7e858e;
+}
+
+/* Ícone (olho/carrinho) que aparece no hover do card */
+.card-action {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(10, 26, 58, 0.65);
+  backdrop-filter: blur(4px);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6) rotate(-12deg);
+  transition: opacity 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
+}
+.card-action svg { width: 20px; height: 20px; }
+.portfolio-card:hover .card-action {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.portfolio-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 0 8px;
+}
+.portfolio-num {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--gray-text);
+}
+.portfolio-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+.portfolio-cat {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gray-text);
+}
+
+/* --------------------------------------------------------------------------
+   12. PROCESSO (fundo navy + linha SVG desenhada)
+   -------------------------------------------------------------------------- */
+.process {
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+}
+
+.process-tagline {
+  margin-top: 12px;
+  color: var(--green);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.process-steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* Linha SVG atrás dos círculos (só desktop) */
+.process-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px; /* alinhada com o centro dos círculos (72px de altura) */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.process-step {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  opacity: 0; /* revelado pelo GSAP conforme a linha "chega" */
+}
+.no-js .process-step { opacity: 1; }
+
+.step-circle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  background: var(--navy-light);
+  color: var(--green);
+  margin-bottom: 20px;
+}
+.step-circle svg { width: 30px; height: 30px; }
+
+.step-num {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--navy);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+.step-text {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   13. DEPOIMENTOS
+   -------------------------------------------------------------------------- */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.testimonial-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-card);
+  padding: 36px 30px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
+  overflow: hidden;
+}
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Aspas decorativas gigantes atrás do texto */
+.testimonial-card::before {
+  content: '\201C';
+  position: absolute;
+  top: 2px;
+  right: 18px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 7rem;
+  line-height: 1;
+  color: rgba(62, 201, 62, 0.16);
+  pointer-events: none;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+  color: var(--green);
+  margin-bottom: 18px;
+}
+.stars svg { width: 17px; height: 17px; }
+
+.testimonial-quote {
+  position: relative;
+  font-size: 1rem;
+  color: var(--navy);
+  margin-bottom: 24px;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.author-name { display: block; font-weight: 600; font-size: 0.95rem; }
+.author-role { display: block; font-size: 0.82rem; color: var(--gray-text); }
+
+/* --------------------------------------------------------------------------
+   14. CTA FINAL
+   -------------------------------------------------------------------------- */
+.cta {
+  position: relative;
+  padding: 130px 0;
+  background: radial-gradient(ellipse at 50% 0%, var(--navy-light) 0%, var(--navy) 70%);
+  overflow: hidden;
+}
+
+.shape-cta-1 { width: 340px; height: 340px; top: -100px; left: 8%; opacity: 0.5; }
+.shape-cta-2 { width: 280px; height: 280px; bottom: -120px; right: 10%; opacity: 0.4; }
+
+.cta-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  letter-spacing: -0.02em;
+  color: var(--white);
+  line-height: 1.1;
+}
+
+.cta-sub {
+  margin: 20px auto 40px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.1rem;
+  max-width: 480px;
+}
+
+.btn-whatsapp {
+  font-size: 1.05rem;
+  padding: 18px 38px;
+}
+.btn-whatsapp svg { width: 24px; height: 24px; color: var(--green); }
+
+/* --------------------------------------------------------------------------
+   15. FOOTER
+   -------------------------------------------------------------------------- */
+.footer {
+  background: var(--navy-darker);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 72px 0 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 56px;
+}
+
+.footer-tagline {
+  margin-top: 18px;
+  font-size: 0.92rem;
+  max-width: 280px;
+}
+
+.footer-heading {
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  color: var(--white);
+  margin-bottom: 18px;
+}
+
+.footer-col { display: flex; flex-direction: column; align-items: flex-start; }
+
+.footer-link {
+  padding: 5px 0;
+  font-size: 0.92rem;
+  transition: color 0.3s var(--ease-smooth);
+}
+.footer-link:hover { color: var(--green); }
+.footer-link--static:hover { color: inherit; cursor: default; }
+
+.footer-social { display: flex; gap: 14px; }
+.social-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.3s var(--ease-smooth), color 0.3s var(--ease-smooth),
+              border-color 0.3s var(--ease-smooth);
+}
+.social-icon svg { width: 18px; height: 18px; }
+/* Hover: cresce + fica verde */
+.social-icon:hover {
+  transform: scale(1.12);
+  color: var(--green);
+  border-color: var(--green);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 24px 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   16. RESPONSIVO
+   Breakpoints: 1024px (tablet) e 768px (mobile).
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .section { padding: 88px 0; }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 56px;
+    padding: 48px 0;
+    text-align: center;
+  }
+  .hero-sub { margin-inline: auto; }
+  .hero-ctas { justify-content: center; }
+  .hero-mockup-wrap { max-width: 560px; margin: 0 auto; width: 100%; }
+
+  .portfolio-grid { gap: 32px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .section { padding: 72px 0; }
+
+  /* Header: esconder nav/CTA, mostrar hambúrguer */
+  .nav, .btn-header { display: none; }
+  .hamburger { display: flex; }
+
+  .hero { min-height: 100svh; }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 20px; }
+
+  .problems-grid,
+  .portfolio-grid { grid-template-columns: 1fr; }
+
+  .laptop-wrap { padding: 28px 24px 20px; }
+
+  /* Processo: layout vertical com linha vertical (a linha SVG
+     horizontal é escondida; o JS anima a linha vertical ::before) */
+  .process-steps {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    max-width: 360px;
+    margin-inline: auto;
+  }
+  .process-line { display: none; }
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 36px;
+    bottom: 36px;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--green);
+    /* --line-scale é animada pelo GSAP (0 → 1) com o scroll */
+    transform: scaleY(var(--line-scale, 0));
+    transform-origin: top center;
+  }
+  .no-js .process-steps::before { transform: scaleY(1); }
+
+  /* Depoimentos: carrossel horizontal com scroll-snap */
+  .testimonials-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 20px;
+    margin-inline: -24px;
+    padding: 4px 24px 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .testimonial-card {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+  }
+
+  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+}
+
+/* --------------------------------------------------------------------------
+   17. ACESSIBILIDADE — reduz animações para quem o pedir no sistema
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
