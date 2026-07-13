@@ -19,6 +19,12 @@
   --gray-text: #5a6272;
   --gray-border: #e5e7eb;
 
+  /* Cores de "glow" surreal — só usadas em auroras/luzes de ambiente,
+     nunca em texto/UI (a marca continua navy + verde) */
+  --violet-glow: #8b5cf6;
+  --teal-glow: #22d3ee;
+  --magenta-glow: #d946a8;
+
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'Inter', -apple-system, sans-serif;
 
@@ -31,6 +37,10 @@
 
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --header-height: 84px;
+
+  /* Textura de grão (ruído) para o acabamento cinematográfico das secções
+     escuras — SVG feTurbulence embutido, sem pedidos de rede */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* --------------------------------------------------------------------------
@@ -279,8 +289,23 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   transition: background 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth);
 }
 
-/* Com o menu mobile aberto: header fica transparente sobre o overlay navy
-   e o logo passa à versão clara para se manter legível */
+/* O hero é escuro (aurora surreal) — por defeito o header transparente usa
+   texto/logo claros; ao fazer scroll (fundo branco sólido) inverte para navy */
+.logo-p-main { fill: var(--white); transition: fill 0.4s var(--ease-smooth); }
+.logo-p-line { fill: var(--navy-darker); transition: fill 0.4s var(--ease-smooth); }
+.logo-text-top { color: var(--white); transition: color 0.4s var(--ease-smooth); }
+
+.header.is-scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 16px rgba(10, 26, 58, 0.08);
+}
+.header.is-scrolled .logo-p-main { fill: var(--navy); }
+.header.is-scrolled .logo-p-line { fill: var(--white); }
+.header.is-scrolled .logo-text-top { color: var(--navy); }
+
+/* Com o menu mobile aberto: header volta a transparente + claro, mesmo que
+   já esteja "is-scrolled" (esta regra vem depois, por isso ganha) */
 .header.menu-open {
   background: transparent;
   box-shadow: none;
@@ -289,12 +314,6 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .header.menu-open .logo-p-main { fill: var(--white); }
 .header.menu-open .logo-p-line { fill: var(--navy); }
 .header.menu-open .logo-text-top { color: var(--white); }
-
-.header.is-scrolled {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 2px 16px rgba(10, 26, 58, 0.08);
-}
 
 .header-inner {
   height: 100%;
@@ -311,9 +330,11 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   position: relative;
   font-weight: 500;
   font-size: 0.95rem;
-  color: var(--navy);
+  color: var(--white);
   padding: 6px 0;
+  transition: color 0.4s var(--ease-smooth);
 }
+.header.is-scrolled .nav-link { color: var(--navy); }
 .nav-link::after {
   content: '';
   position: absolute;
@@ -343,9 +364,10 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   width: 24px;
   height: 2.5px;
   border-radius: 2px;
-  background: var(--navy);
+  background: var(--white);
   transition: transform 0.3s var(--ease-smooth), opacity 0.3s, background 0.3s;
 }
+.header.is-scrolled .hamburger:not(.is-open) span { background: var(--navy); }
 /* X quando o menu está aberto */
 .hamburger.is-open span { background: var(--white); }
 .hamburger.is-open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
@@ -389,9 +411,27 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background: var(--off-white);
+  /* Fundo "portal" surreal: navy profundo com nódoas de luz aurora
+     (verde/violeta/teal) — as .shape por cima fazem o movimento */
+  background:
+    radial-gradient(ellipse 900px 700px at 15% 0%, rgba(62, 201, 62, 0.22), transparent 60%),
+    radial-gradient(ellipse 800px 600px at 100% 20%, rgba(139, 92, 246, 0.24), transparent 60%),
+    radial-gradient(ellipse 700px 900px at 50% 110%, rgba(34, 211, 238, 0.14), transparent 60%),
+    linear-gradient(180deg, var(--navy) 0%, #081227 55%, var(--navy) 100%);
   overflow: hidden;
   padding-top: var(--header-height);
+}
+
+/* Grão cinematográfico subtil por cima da aurora (mix-blend overlay) */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Formas flutuantes desfocadas ao fundo (animadas em loop no JS) */
@@ -403,13 +443,14 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .shape {
   position: absolute;
   border-radius: 50%;
-  filter: blur(60px);
+  filter: blur(70px);
 }
-.shape-green { background: rgba(62, 201, 62, 0.18); }
-.shape-navy { background: rgba(20, 39, 92, 0.12); }
-.shape-1 { width: 380px; height: 380px; top: -80px; left: -120px; }
-.shape-2 { width: 300px; height: 300px; bottom: 10%; right: -80px; }
-.shape-3 { width: 220px; height: 220px; top: 45%; left: 40%; opacity: 0.7; }
+.shape-green { background: rgba(62, 201, 62, 0.35); }
+.shape-navy { background: rgba(34, 211, 238, 0.22); }
+.shape-violet { background: rgba(139, 92, 246, 0.32); }
+.shape-1 { width: 420px; height: 420px; top: -100px; left: -140px; }
+.shape-2 { width: 340px; height: 340px; bottom: 5%; right: -100px; }
+.shape-3 { width: 260px; height: 260px; top: 42%; left: 38%; opacity: 0.8; }
 
 .hero-inner {
   display: grid;
@@ -417,14 +458,15 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   align-items: center;
   gap: 48px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .hero-badge {
   display: inline-block;
-  background: var(--green-soft);
-  color: var(--navy);
-  border: 1px solid rgba(62, 201, 62, 0.3);
+  background: rgba(62, 201, 62, 0.14);
+  color: var(--green);
+  border: 1px solid rgba(62, 201, 62, 0.35);
+  backdrop-filter: blur(6px);
   padding: 8px 18px;
   border-radius: 999px;
   font-size: 0.85rem;
@@ -435,19 +477,35 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .hero-title {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2.5rem, 6vw, 5.25rem);
   letter-spacing: -0.02em;
-  line-height: 1.08;
-  color: var(--navy);
+  line-height: 1.06;
+  color: var(--white);
 }
 .hero-word { display: inline-block; /* necessário para animar translateY por palavra */ }
-.hero-word--green { color: var(--green); }
+/* Palavra-chave com glow verde, tipo néon suave — mesmo efeito dos
+   pósteres/anúncios cinematográficos de referência */
+.hero-word--green {
+  color: var(--green);
+  text-shadow: 0 0 28px rgba(62, 201, 62, 0.65), 0 0 70px rgba(62, 201, 62, 0.35);
+}
 
 .hero-sub {
   margin-top: 24px;
   font-size: 1.15rem;
-  color: var(--gray-text);
+  color: rgba(255, 255, 255, 0.72);
   max-width: 480px;
+}
+
+/* Botão outline precisa de contraste claro sobre o hero escuro */
+.hero .btn-outline {
+  border-color: rgba(255, 255, 255, 0.55);
+  color: var(--white);
+}
+.hero .btn-outline:hover {
+  background: var(--white);
+  color: var(--navy);
+  border-color: var(--white);
 }
 
 .hero-ctas {
@@ -464,15 +522,29 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .no-js .hero-badge, .no-js .hero-word, .no-js .hero-sub, .no-js .hero-cta,
 .no-js .hero-mockup-wrap, .no-js .scroll-indicator { opacity: 1; }
 
-/* ---- Mockup de browser flutuante ---- */
+/* ---- Mockup de browser flutuante, num "portal" de luz ---- */
 .hero-mockup-wrap {
+  position: relative;
   perspective: 1200px; /* dá profundidade à rotação 3D do mockup */
+}
+
+/* Anel de luz difusa atrás do mockup — sensação de portal/glow surreal,
+   como o produto a flutuar num ambiente bioluminescente */
+.hero-mockup-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -12% -8%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(62, 201, 62, 0.45), transparent 55%),
+    radial-gradient(circle at 75% 70%, rgba(139, 92, 246, 0.4), transparent 55%);
+  filter: blur(50px);
+  z-index: -1;
 }
 
 .browser-mockup {
   background: var(--white);
   border-radius: 14px;
-  box-shadow: 0 24px 64px rgba(10, 26, 58, 0.18);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45), 0 0 90px rgba(62, 201, 62, 0.18);
   overflow: hidden;
   transform: rotateY(-6deg) rotateX(2deg); /* pose 3D base */
   transform-style: preserve-3d;
@@ -540,25 +612,24 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .mouse {
   width: 24px;
   height: 38px;
-  border: 2px solid var(--navy);
+  border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 14px;
   display: flex;
   justify-content: center;
   padding-top: 7px;
-  opacity: 0.6;
 }
 .mouse-wheel {
   width: 3px;
   height: 8px;
   border-radius: 3px;
-  background: var(--navy);
+  background: var(--green);
 }
 .scroll-label {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--gray-text);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* --------------------------------------------------------------------------
@@ -645,7 +716,29 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 
 /* --------------------------------------------------------------------------
    11. PORTFÓLIO (mockups de laptop + tilt 3D)
+   Fundo quase-preto para os laptops "flutuarem" no espaço, como numa
+   galeria de templates premium — o brilho de cada tela fica em destaque.
    -------------------------------------------------------------------------- */
+.portfolio.section-alt {
+  position: relative;
+  background: radial-gradient(ellipse 1000px 600px at 50% 0%, #0d1f42 0%, var(--navy-darker) 65%);
+  overflow: hidden;
+}
+.portfolio.section-alt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.portfolio .container { position: relative; z-index: 1; }
+
+.portfolio .section-head .section-title,
+.portfolio .section-label { color: var(--white); }
+.portfolio .section-label { color: rgba(255, 255, 255, 0.55); }
+
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -659,18 +752,54 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 
 .laptop-wrap {
   position: relative;
-  background: var(--white);
-  border: 1px solid var(--gray-border);
+  /* painel de vidro escuro — deixa a luz da tela ser o foco */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-card);
   padding: 40px 48px 28px;
-  box-shadow: var(--shadow-card);
-  transition: box-shadow 0.3s var(--ease-smooth);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.3s var(--ease-smooth), border-color 0.3s var(--ease-smooth);
   overflow: hidden;
 }
-.portfolio-card:hover .laptop-wrap { box-shadow: var(--shadow-card-hover); }
+.portfolio-card:hover .laptop-wrap {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5);
+}
+
+/* Poça de luz colorida sob o laptop — dá a sensação de o produto estar a
+   flutuar numa cena com luz ambiente própria (cada projeto tem a sua cor,
+   ver --glow-a/--glow-b definidos por nth-child mais abaixo) */
+.laptop-wrap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 70%;
+  height: 60px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse, var(--glow-a, rgba(62,201,62,0.35)) 0%, transparent 72%);
+  filter: blur(18px);
+  opacity: 0.8;
+  transition: opacity 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
+  pointer-events: none;
+}
+.portfolio-card:hover .laptop-wrap::before {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.08);
+}
+
+/* Cor da poça de luz por projeto (combina com o gradiente da tela) */
+.portfolio-card:nth-child(1) .laptop-wrap { --glow-a: rgba(20, 39, 92, 0.4); }
+.portfolio-card:nth-child(2) .laptop-wrap { --glow-a: rgba(122, 92, 158, 0.4); }
+.portfolio-card:nth-child(3) .laptop-wrap { --glow-a: rgba(179, 84, 30, 0.35); }
+.portfolio-card:nth-child(4) .laptop-wrap { --glow-a: rgba(31, 138, 112, 0.4); }
+.portfolio-card:nth-child(5) .laptop-wrap { --glow-a: rgba(43, 108, 176, 0.4); }
+.portfolio-card:nth-child(6) .laptop-wrap { --glow-a: rgba(62, 201, 62, 0.4); }
 
 /* ---- Mockup de laptop em CSS puro ---- */
 .laptop {
+  position: relative;
+  z-index: 1;
   transform: perspective(1000px) rotateX(2deg); /* leve pose 3D */
 }
 
@@ -702,13 +831,45 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   padding: 28px;
 }
 
-/* Fundos diferentes por projeto */
-.screen-p1 { background: linear-gradient(135deg, #14275c, #0a1a3a); }
-.screen-p2 { background: linear-gradient(135deg, #7a5c9e, #43315e); }
-.screen-p3 { background: linear-gradient(135deg, #b3541e, #7a3010); }
-.screen-p4 { background: linear-gradient(135deg, #1f8a70, #0f4c3f); }
-.screen-p5 { background: linear-gradient(135deg, #2b6cb0, #1a3a5c); }
-.screen-p6 { background: linear-gradient(135deg, #3ec93e, #1f7a1f); }
+/* Fundos diferentes por projeto — gradiente base + "luzes" radiais
+   sobrepostas (bioluminescência), para a cena parecer mais onírica do
+   que um simples flat design */
+.screen-p1 {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(62, 201, 62, 0.45), transparent 55%),
+    radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.35), transparent 55%),
+    linear-gradient(135deg, #14275c, #0a1a3a);
+}
+.screen-p2 {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(217, 70, 168, 0.4), transparent 55%),
+    radial-gradient(circle at 80% 75%, rgba(139, 92, 246, 0.4), transparent 55%),
+    linear-gradient(135deg, #7a5c9e, #35243f);
+}
+.screen-p3 {
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255, 184, 84, 0.5), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(217, 70, 168, 0.3), transparent 55%),
+    linear-gradient(135deg, #b3541e, #601f0a);
+}
+.screen-p4 {
+  background:
+    radial-gradient(circle at 20% 25%, rgba(34, 211, 238, 0.4), transparent 55%),
+    radial-gradient(circle at 85% 75%, rgba(62, 201, 62, 0.35), transparent 55%),
+    linear-gradient(135deg, #1f8a70, #0b3a30);
+}
+.screen-p5 {
+  background:
+    radial-gradient(circle at 25% 20%, rgba(139, 92, 246, 0.4), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.35), transparent 55%),
+    linear-gradient(135deg, #2b6cb0, #142a4a);
+}
+.screen-p6 {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.35), transparent 55%),
+    radial-gradient(circle at 85% 80%, rgba(34, 211, 238, 0.3), transparent 55%),
+    linear-gradient(135deg, #3ec93e, #12470f);
+}
 
 .screen-fake-nav { display: flex; gap: 6px; margin-bottom: 8px; }
 .screen-fake-nav i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); }
@@ -780,13 +941,14 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   font-weight: 600;
   font-size: 13px;
   letter-spacing: 0.1em;
-  color: var(--gray-text);
+  color: rgba(255, 255, 255, 0.35);
 }
 .portfolio-name {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.25rem;
   letter-spacing: -0.01em;
+  color: var(--white);
 }
 .portfolio-cat {
   display: block;
@@ -795,16 +957,31 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--gray-text);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 /* --------------------------------------------------------------------------
    12. PROCESSO (fundo navy + linha SVG desenhada)
    -------------------------------------------------------------------------- */
 .process {
-  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-light) 100%);
+  position: relative;
+  background:
+    radial-gradient(ellipse 700px 500px at 90% 100%, rgba(139, 92, 246, 0.18), transparent 60%),
+    radial-gradient(ellipse 600px 400px at 5% 0%, rgba(62, 201, 62, 0.16), transparent 60%),
+    linear-gradient(180deg, var(--navy) 0%, var(--navy-light) 100%);
   color: var(--white);
+  overflow: hidden;
 }
+.process::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.process .container { position: relative; z-index: 1; }
 
 .process-tagline {
   margin-top: 12px;
@@ -965,12 +1142,25 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .cta {
   position: relative;
   padding: 130px 0;
-  background: radial-gradient(ellipse at 50% 0%, var(--navy-light) 0%, var(--navy) 70%);
+  background:
+    radial-gradient(ellipse 800px 500px at 15% 100%, rgba(139, 92, 246, 0.22), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 85% 0%, rgba(34, 211, 238, 0.16), transparent 60%),
+    radial-gradient(ellipse at 50% 0%, var(--navy-light) 0%, var(--navy) 70%);
   overflow: hidden;
 }
+.cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
 
-.shape-cta-1 { width: 340px; height: 340px; top: -100px; left: 8%; opacity: 0.5; }
-.shape-cta-2 { width: 280px; height: 280px; bottom: -120px; right: 10%; opacity: 0.4; }
+.shape-cta-1 { width: 380px; height: 380px; top: -110px; left: 6%; opacity: 0.6; }
+.shape-cta-2 { width: 320px; height: 320px; bottom: -130px; right: 8%; opacity: 0.5; }
+.shape-cta-3 { width: 240px; height: 240px; top: 30%; right: 30%; opacity: 0.4; }
 
 .cta-inner {
   position: relative;
@@ -986,6 +1176,7 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
   color: var(--white);
   line-height: 1.1;
 }
+.cta-title .text-green { text-shadow: 0 0 32px rgba(62, 201, 62, 0.6); }
 
 .cta-sub {
   margin: 20px auto 40px;
@@ -997,6 +1188,7 @@ button { font: inherit; border: none; background: none; cursor: pointer; }
 .btn-whatsapp {
   font-size: 1.05rem;
   padding: 18px 38px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 60px rgba(62, 201, 62, 0.35);
 }
 .btn-whatsapp svg { width: 24px; height: 24px; color: var(--green); }
 
